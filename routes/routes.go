@@ -10,11 +10,7 @@ import (
 func SetupRouter() *gin.Engine {
 	router := gin.Default() // Inisialisasi router
 
-	// Rute publik
-	// router.GET("/", func(c *gin.Context) {
-	// 	c.JSON(200, gin.H{"message": "Welcome to the API!"})
-	// })
-
+	router.Use(controllers.Handle())
 	public := router.Group("/", middlewares.BasicAuth())
 	{
 		public.PUT("user", controllers.UpdateUser)
@@ -45,33 +41,9 @@ func SetupRouter() *gin.Engine {
 	mahasiswa.Use(middlewares.CheckRole("mahasiswa"))
 	{
 		mahasiswa.POST("/enrollment", controllers.CreateEnrollment)
-		//dosen.PUT("/grade")
+		mahasiswa.GET("/gpa", controllers.GetGPA)
 	}
 
-	// Grup Admin Role
-
-	// {
-	// 	userRoutes.GET("/", controllers.GetAllUsers)
-	// 	userRoutes.GET("/:id", controllers.GetUserByID)
-	// 	userRoutes.PUT("/:id", controllers.UpdateUser)
-	// 	userRoutes.DELETE("/:id", controllers.DeleteUser)
-	// }
-
-	// roleRoutes := router.Group("/roles")
-	// roleRoutes.POST("/", controllers.CreateRole)
-
-	// // Grup Auth
-	// authRoutes := router.Group("/auth")
-	// {
-	// 	authRoutes.POST("/login", controllers.LoginUser)
-	// 	authRoutes.POST("/register", controllers.RegisterUser)
-	// }
-
-	// // Grup dengan middleware autentikasi
-	// securedRoutes := router.Group("/secured", middleware.AuthMiddleware())
-	// {
-	// 	securedRoutes.GET("/profile", controllers.GetProfile)
-	// }
 	router.Run(":8080")
 	return router
 }

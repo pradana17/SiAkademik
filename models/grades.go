@@ -15,3 +15,19 @@ type Grade struct {
 	Grader     User      `gorm:"foreignKey:GradedBy"`   // Relasi many-to-one ke User
 	CreatedAt  time.Time `gorm:"autoCreateTime"`
 }
+
+type GradeDetails struct {
+	CourseName string `json:"course_name"`
+	Grade      string `json:"grade"`
+	Credits    int    `json:"credits"`
+}
+
+type GPAResponse struct {
+	StudentID            uint           `json:"student_id"`
+	SemesterName         string         `json:"semester_name"`
+	TotalCreditsSemester int            `json:"total_credits_semester"`
+	SemesterGPA          float64        `json:"semester_gpa"`
+	Grades               []GradeDetails `json:"grades"`
+	TotalCredits         int            `json:"total_credits"`
+	GPACumulative        float64        `json:"gpa_cumulative"`
+}

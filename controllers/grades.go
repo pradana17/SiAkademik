@@ -8,32 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
-func CreateGrade(c *gin.Context) {
-	var grade models.Grade
-	// Bind the request body to the user model
-	if err := c.ShouldBindJSON(&grade); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	lecturerID, exists := c.Get("userid")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-
-	// Call the service to create grade
-	if err := services.CreateGrade(lecturerID.(uint), &grade); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Return a success response
-	c.JSON(http.StatusOK, gin.H{"message": "Grade created successfully"})
-}
-*/
-
 func CreateGrade(c *gin.Context) {
 	var input models.Grade
 
@@ -58,4 +32,27 @@ func CreateGrade(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Grade successfully created"})
+}
+
+func GetGPA(c *gin.Context) {
+	var input models.Grade
+	// Bind data dari request body ke input struct
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	studentID, exists := c.Get("userid")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauhorized Student Id"})
+		return
+	}
+
+	grade, err := services.GetGPA(studentID.(uint), uint(input.SemesterID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": grade})
+
 }
