@@ -1,4 +1,4 @@
-package controllers
+package middlewares
 
 import (
 	"SiAkademik/services"
@@ -10,8 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Handle() gin.HandlerFunc {
+func AuditLog() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
 		startTime := time.Now()
 
 		// Simpan informasi request
@@ -20,14 +21,12 @@ func Handle() gin.HandlerFunc {
 
 		userID, ok := c.Get("userid")
 		if !ok {
-			// Jika userID tidak ditemukan, gunakan default (misal 0)
 			userID = uint(0)
 		}
 
-		// Lakukan type assertion untuk memastikan tipe uint64
+		// // Lakukan type assertion untuk memastikan tipe uint64
 		userIDUint, ok := userID.(uint)
 		if !ok {
-			// Jika gagal konversi, gunakan default (misal 0)
 			userIDUint = uint(0)
 		}
 
@@ -38,7 +37,12 @@ func Handle() gin.HandlerFunc {
 			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes)) // Reset body untuk dibaca ulang di handler
 			_ = json.Unmarshal(bodyBytes, &requestBody)
 		}
-
+		responseBodyBuffer := &bytes.Buffer{}
+		writerWrapper := &responseWriterWrapper{
+			ResponseWriter: c.Writer,
+			body:           responseBodyBuffer,
+		}
+		c.Writer = writerWrapper
 		// Lanjutkan ke handler berikutnya
 		c.Next()
 
@@ -46,14 +50,12 @@ func Handle() gin.HandlerFunc {
 		statusCode := c.Writer.Status()
 		duration := time.Since(startTime).Seconds()
 
-		// Buat log response (dapat ditingkatkan jika ingin menangkap body response)
-		responseBody := gin.H{
-			"status": statusCode,
-		}
+		var responseBody map[string]interface{}
+		_ = json.Unmarshal(writerWrapper.body.Bytes(), &responseBody)
 
 		// Simpan log audit ke database melalui service
 		services.CreateAuditLog(
-			userIDUint, // userID (sesuaikan dengan autentikasi jika ada)
+			userIDUint, // userID
 			method,
 			endpoint,
 			requestBody,
@@ -62,4 +64,15 @@ func Handle() gin.HandlerFunc {
 			duration,
 		)
 	}
+
+}
+
+func (r *responseWriterWrapper) Write(b []byte) (int, error) {
+	r.body.Write(b) // Salin data yang ditulis ke buffer
+	return r.ResponseWriter.Write(b)
+}
+
+type responseWriterWrapper struct {
+	gin.ResponseWriter
+	body *bytes.Buffer
 }

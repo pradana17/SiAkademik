@@ -18,7 +18,9 @@ type Course struct {
 }
 
 type CourseResponse struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"` // Nama mata kuliah
-	Code string `json:"code"` // Kode mata kuliah
+	ID       uint   `json:"id"`
+	Name     string `json:"name"` // Nama mata kuliah
+	Code     string `json:"code"` // Kode mata kuliah
+	Schedule string `json:"schedule"`
+	Credits  int    `json:"credits"`
 }

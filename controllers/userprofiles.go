@@ -20,7 +20,7 @@ func GetUserProfile(c *gin.Context) {
 	// Panggil service untuk mengambil user berdasarkan ID
 	up, err := services.GetUserProfile(userid.(uint))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User Profile not found"})
+		//c.JSON(http.StatusNotFound, gin.H{"error": "User Profile not found"})
 		CreateUserProfile(c)
 		return
 
@@ -64,12 +64,6 @@ func UpdateUserProfile(c *gin.Context) {
 
 func CreateUserProfile(c *gin.Context) {
 	var userProfile models.UserProfile
-	// Bind the request body to the user model
-	// if err := c.ShouldBindJSON(&userProfile); err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid data"})
-	// 	return
-	// }
-
 	userid, exists := c.Get("userid")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Userid not found"})
@@ -85,5 +79,5 @@ func CreateUserProfile(c *gin.Context) {
 	}
 
 	// Return a success response
-	c.JSON(http.StatusOK, gin.H{"message": "User Profile created successfully"})
+	c.JSON(http.StatusOK, gin.H{"user profile": &userProfile})
 }

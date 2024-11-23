@@ -55,3 +55,31 @@ func GetCourseByLectureId(c *gin.Context) {
 		"course": response,
 	})
 }
+
+func GetStudentCourse(c *gin.Context) {
+
+	studentID, exists := c.Get("userid")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": exists})
+		return
+	}
+
+	semesterID, err := services.GetActiveSemester()
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err})
+		return
+	}
+
+	enroll, err := services.GetStudentCourse(studentID.(uint), semesterID.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+
+	}
+
+	response := services.CourseResponse(enroll)
+	// Mengembalikan data user
+	c.JSON(http.StatusOK, gin.H{
+		"course": response,
+	})
+}

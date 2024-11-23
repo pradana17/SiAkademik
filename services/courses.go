@@ -36,14 +36,43 @@ func GetCourseByLectureId(LecturerID uint) ([]models.Course, error) {
 	return courses, nil
 }
 
+func GetCourseById(ID uint) ([]models.Course, error) {
+
+	courses, err := repository.GetCourseById(ID)
+	if err != nil {
+		return nil, err
+	}
+	return courses, nil
+}
+
 func CourseResponse(courses []models.Course) []models.CourseResponse {
 	var responses []models.CourseResponse
 	for _, course := range courses {
 		responses = append(responses, models.CourseResponse{
-			ID:   course.ID,
-			Name: course.Name,
-			Code: course.Code,
+			ID:       course.ID,
+			Name:     course.Name,
+			Code:     course.Code,
+			Schedule: course.Schedule,
+			Credits:  course.Credits,
 		})
 	}
 	return responses
+}
+
+func GetStudentCourse(studentID, semesterID uint) ([]models.Course, error) {
+	var courses []models.Course
+	enroll, err := repository.GetStudentEnrollment(studentID, semesterID)
+	if err != nil {
+		return nil, err
+	}
+	//return enroll, nil
+	for _, enrollment := range enroll {
+		course, err := repository.GetCourseById(enrollment.CourseID)
+		if err != nil {
+			return nil, err
+		}
+		courses = append(courses, course...)
+	}
+	return courses, nil
+
 }

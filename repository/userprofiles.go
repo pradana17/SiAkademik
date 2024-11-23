@@ -14,11 +14,11 @@ func CreateUserProfile(up *models.UserProfile) error {
 	return nil
 }
 
-func UpdateUserProfile(userID uint, up models.UserProfile) error {
+func UpdateUserProfile(id uint, up models.UserProfile) error {
 	var oldData models.UserProfile
 
 	// Get the existing user data from the database
-	get := database.DB.First(&oldData, userID).Error
+	get := database.DB.First(&oldData, id).Error
 	if get != nil {
 		return get // Return the error if the user is not found
 	}

@@ -9,15 +9,22 @@ import (
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default() // Inisialisasi router
+	//router.Use(middlewares.BasicAuth()) //basicAuth
+	router.Use(middlewares.AuditLog())
+	auth := router.Group("/auth")
+	{
+		auth.POST("/login", controllers.Login)
+	}
 
-	router.Use(controllers.Handle())
-	public := router.Group("/", middlewares.BasicAuth())
+	router.Use(middlewares.JWTAuthMiddleware()) //jwt
+
+	public := router.Group("/")
 	{
 		public.PUT("user", controllers.UpdateUser)
 		public.GET("userprofile", controllers.GetUserProfile)
 		public.PUT("userprofile", controllers.UpdateUserProfile)
 	}
-	admin := router.Group("/admin", middlewares.BasicAuth())
+	admin := router.Group("/admin")
 	// Middleware untuk memeriksa role "admin"
 	admin.Use(middlewares.CheckRole("admin"))
 	{
@@ -28,7 +35,7 @@ func SetupRouter() *gin.Engine {
 		admin.POST("/semesters", controllers.CreateSemester)
 	}
 
-	dosen := router.Group("/dosen", middlewares.BasicAuth())
+	dosen := router.Group("/dosen")
 	// Middleware untuk memeriksa role "admin"
 	dosen.Use(middlewares.CheckRole("dosen"))
 	{
@@ -36,12 +43,13 @@ func SetupRouter() *gin.Engine {
 		dosen.POST("/grade", controllers.CreateGrade)
 	}
 
-	mahasiswa := router.Group("/mahasiswa", middlewares.BasicAuth())
+	mahasiswa := router.Group("/mahasiswa")
 	// Middleware untuk memeriksa role "admin"
 	mahasiswa.Use(middlewares.CheckRole("mahasiswa"))
 	{
 		mahasiswa.POST("/enrollment", controllers.CreateEnrollment)
 		mahasiswa.GET("/gpa", controllers.GetGPA)
+		mahasiswa.GET("/course", controllers.GetStudentCourse)
 	}
 
 	router.Run(":8080")

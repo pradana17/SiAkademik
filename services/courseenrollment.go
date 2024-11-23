@@ -45,3 +45,4 @@ func GetEnrollment(courseID, studentID, semesterID uint) ([]models.CourseEnrollm
 	}
 	return enroll, nil
 }
+

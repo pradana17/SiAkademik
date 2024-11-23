@@ -45,34 +45,3 @@ func DeleteRole(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Role deleted successfully"})
 }
-
-// func GetRoleByID(c *gin.Context) {
-// 	roleID, exists := c.Get("roleid")
-// 	if !exists {
-// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Role ID not found"})
-// 		return
-// 	}
-
-// 	// Pastikan roleID adalah tipe uint
-// 	roleIDUint, ok := roleID.(uint)
-// 	if !ok {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Role ID type"})
-// 		return
-// 	}
-
-// 	// Panggil service untuk mengambil role berdasarkan ID
-// 	role, err := services.GetRoleByID(roleIDUint)
-// 	if err != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{"error": "Role not found"})
-// 		return
-// 	}
-
-// 	// Mengembalikan data role
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"id":   role.ID,
-// 		"name": role.Name,
-// 	})
-
-// 	c.Set("rolename", role.Name)
-// 	c.Next()
-// }

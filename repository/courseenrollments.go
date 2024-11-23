@@ -42,3 +42,12 @@ func CheckExistingEnroll(courseID, studentID, semesterID uint) error {
 	}
 	return nil
 }
+
+func GetStudentEnrollment(studentID, semesterID uint) ([]models.CourseEnrollment, error) {
+	var enroll []models.CourseEnrollment
+	err := database.DB.Where("student_id = ? AND semester_id=?", studentID, semesterID).Find(&enroll).Error
+	if err != nil {
+		return nil, err
+	}
+	return enroll, nil
+}

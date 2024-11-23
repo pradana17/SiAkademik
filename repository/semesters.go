@@ -4,7 +4,6 @@ import (
 	"SiAkademik/database"
 	"SiAkademik/models"
 	"fmt"
-	"log"
 )
 
 func CreateSemester(sem *models.Semester) error {
@@ -43,6 +42,5 @@ func GetSemesterById(semesterID uint) ([]models.Semester, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Print("data", semesterID)
 	return semester, nil
 }
