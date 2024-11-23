@@ -17,7 +17,7 @@ Aplikasi ini memiliki berbagai macam endpoint yang dibagi berdasarkan peran peng
 - **Go (Golang)**: Bahasa pemrograman untuk backend.
 - **Gin**: Web framework untuk Golang yang digunakan untuk menangani permintaan HTTP.
 - **JWT**: Digunakan untuk autentikasi dan otorisasi.
-- **Swagger**: Digunakan untuk dokumentasi API.
+- **GORM**: ORM (Object Relational Mapper) untuk Golang, digunakan untuk mempermudah interaksi dengan basis data seperti MySQL, PostgreSQL, dan SQLite.
 
 ## Endpoints API
 Di bawah ini adalah daftar lengkap endpoint yang tersedia dalam aplikasi ini, yang terbagi berdasarkan peran pengguna.

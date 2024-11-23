@@ -3,6 +3,7 @@ package routes
 import (
 	"SiAkademik/controllers"
 	"SiAkademik/middlewares"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,6 +53,6 @@ func SetupRouter() *gin.Engine {
 		mahasiswa.GET("/course", controllers.GetStudentCourse)
 	}
 
-	router.Run(":8080")
+	router.Run(":" + os.Getenv("PORT"))
 	return router
 }
