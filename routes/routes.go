@@ -5,11 +5,21 @@ import (
 	"SiAkademik/middlewares"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default() // Inisialisasi router
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000", "https://siakademik.up.railway.app"}, // Ganti sesuai domain frontend
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
 	//router.Use(middlewares.BasicAuth()) //basicAuth
 	router.Use(middlewares.AuditLog())
 	auth := router.Group("/auth")
@@ -53,6 +63,6 @@ func SetupRouter() *gin.Engine {
 		mahasiswa.GET("/course", controllers.GetStudentCourse)
 	}
 
-	router.Run(":" + os.Getenv("PORT"))
+	router.Run(":8080" + os.Getenv("PORT"))
 	return router
 }
