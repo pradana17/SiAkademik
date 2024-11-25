@@ -63,6 +63,6 @@ func SetupRouter() *gin.Engine {
 		mahasiswa.GET("/course", controllers.GetStudentCourse)
 	}
 
-	router.Run(":8080" + os.Getenv("PORT"))
+	router.Run(":" + os.Getenv("PORT"))
 	return router
 }
