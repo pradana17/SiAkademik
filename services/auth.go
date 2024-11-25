@@ -24,7 +24,7 @@ func Authenticate(username, password string) (string, error) {
 	}
 
 	if user.Password != password {
-		return nil, fmt.Errorf("invalid credentials")
+		return "", errors.New("invalid credentials")
 	}
 
 	// Buat token JWT
