@@ -13,7 +13,7 @@ func SetupRouter() *gin.Engine {
 	router := gin.Default() // Inisialisasi router
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "https://siakademik.up.railway.app"}, // Ganti sesuai domain frontend
+		AllowOrigins:     []string{"*"}, // Ganti sesuai domain frontend
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
