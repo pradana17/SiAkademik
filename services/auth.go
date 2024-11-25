@@ -23,6 +23,10 @@ func Authenticate(username, password string) (string, error) {
 		return "", err
 	}
 
+	if user.Password != password {
+		return nil, fmt.Errorf("invalid credentials")
+	}
+
 	// Buat token JWT
 	claims := models.JWTClaims{
 		UserID: user.ID,
